@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tracking Self Rebranding Ramadhan</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a5c38;
+    --green-mid: #2d7a50;
+    --green-light: #e8f5ee;
+    --gold: #b8882a;
+    --gold-light: #f5e8c0;
+    --gold-pale: #fdf8ee;
+    --red: #c0392b;
+    --text: #1a1a1a;
+    --text-muted: #888;
+    --border: #e0d8cc;
+    --row-alt: #fafaf7;
+    --checked: #e8f5ee;
+    --checked-border: #2d7a50;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #fff;
+    font-family: 'Tajawal', sans-serif;
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  /* ── TOP HEADER ── */
+  .top-header {
+    background: var(--green);
+    color: #fff;
+    padding: 28px 32px 22px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  }
+
+  .top-header-inner {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .header-left h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.35rem;
+    letter-spacing: 0.06em;
+    color: #fff;
+  }
+
+  .header-left p {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.65);
+    margin-top: 3px;
+    letter-spacing: 0.1em;
+  }
+
+  .arabic-small {
+    font-family: 'Amiri', serif;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 4px;
+  }
+
+  /* progress bar */
+  .progress-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    min-width: 200px;
+  }
+
+  .progress-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.1em;
+  }
+
+  .progress-bar-outer {
+    width: 200px;
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(to right, #f9ca24, #b8882a);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-pct {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: #f9ca24;
+    font-weight: 600;
+  }
+
+  .btn-reset {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.75);
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 4px;
+  }
+  .btn-reset:hover { background: rgba(255,255,255,0.22); color: #fff; }
+
+  /* ── SCROLL WRAPPER ── */
+  .table-wrap {
+    overflow-x: auto;
+    padding: 28px 24px 60px;
+    max-width: 100%;
+  }
+
+  /* ── TABLE ── */
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 1200px;
+    width: 100%;
+  }
+
+  /* sticky left column */
+  th.ibadah-col, td.ibadah-col {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    min-width: 230px;
+    max-width: 230px;
+  }
+  tr.group-header td {
+    background: var(--green);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    border: none;
+  }
+
+  tr.group-header td.ibadah-col {
+    background: var(--green);
+    border-right: 2px solid rgba(255,255,255,0.15);
+  }
+
+  tr.group-header td.day-cell {
+    text-align: center;
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* COLUMN HEADERS (day numbers) */
+  thead th {
+    background: #fff;
+    border-bottom: 2px solid var(--border);
+    padding: 0;
+    vertical-align: bottom;
+  }
+
+  thead th.ibadah-col {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-right: 2px solid var(--border);
+    background: #fff;
+  }
+
+  .day-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px 6px;
+    min-width: 38px;
+  }
+
+  .day-num {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .day-progress {
+    width: 28px;
+    height: 3px;
+    background: #eee;
+    border-radius: 99px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+
+  .day-progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 99px;
+    transition: width 0.3s;
+  }
+
+  /* DATA ROWS */
+  tbody tr:not(.group-header) {
+    transition: background 0.15s;
+  }
+
+  tbody tr:not(.group-header):hover {
+    background: #f5f2ec !important;
+  }
+
+  tbody tr:not(.group-header):nth-child(even):not(.group-header) {
+    background: var(--row-alt);
+  }
+
+  /* ibadah label cell */
+  td.ibadah-col {
+    background: inherit;
+    border-right: 2px solid var(--border);
+    padding: 0 16px;
+    height: 44px;
+  }
+
+  .ibadah-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+  }
+
+  .ibadah-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .ibadah-name {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .ibadah-sub {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  /* sticky nama column */
+  th.nama-col, td.nama-col {
+    position: sticky;
+    left: 230px;
+    z-index: 9;
+    min-width: 130px;
+    max-width: 130px;
+    background: #fdfaf0;
+  }
+
+  thead th.nama-col {
+    text-align: center;
+    padding: 12px 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #9a6e14;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-right: 2px solid #e8d8a0;
+    border-bottom: 2px solid var(--border);
+    background: #fdf6e3;
+  }
+
+  td.nama-col {
+    border-right: 2px solid #e8d8a0;
+    padding: 0 8px;
+    height: 44px;
+    background: #fdfaf0;
+  }
+
+  .nama-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.82rem;
+    color: #7a5c1a;
+    font-weight: 500;
+    outline: none;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .nama-input::placeholder { color: #ccc; font-style: italic; font-size: 0.74rem; }
+  .nama-input:focus { background: #fff8e8; border-radius: 4px; }
+
+  tr.group-header td.nama-col {
+    background: inherit;
+    border-right: 2px solid rgba(255,255,255,0.15);
+  }
+  td.day-cell {
+    text-align: center;
+    padding: 0 2px;
+    border-bottom: 1px solid #f0ece4;
+    vertical-align: middle;
+    transition: background 0.15s;
+  }
+
+  td.day-cell.checked {
+    background: var(--checked);
+  }
+
+  /* Checkbox styling */
+  .check-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid #d0c8bc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: #fff;
+    user-select: none;
+    font-size: 0;
+  }
+
+  .check-box:hover {
+    border-color: var(--green-mid);
+    background: var(--green-light);
+  }
+
+  .check-box.done {
+    background: var(--green-mid);
+    border-color: var(--green-mid);
+    font-size: 0.75rem;
+    color: #fff;
+  }
+
+  .check-box.done::after { content: '✓'; }
+
+  /* special row — doa lailatul qadr */
+  tr.special-row td.ibadah-col { background: #fffdf5 !important; }
+  tr.special-row .ibadah-name  { color: var(--red); }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 0 24px 24px;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    align-items: center;
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+
+  .legend-box {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid #d0c8bc;
+    background: #fff;
+  }
+  .legend-box.done {
+    background: var(--green-mid);
+    border-color: var(--green-mid);
+  }
+
+  .dekade-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 2px;
+  }
+
+  th.dekade-1 .day-head { border-top: 3px solid #74b9ff; }
+  th.dekade-2 .day-head { border-top: 3px solid #55efc4; }
+  th.dekade-3 .day-head { border-top: 3px solid #fdcb6e; }
+
+</style>
+</head>
+<body>
+
+<!-- TOP HEADER -->
+<div class="top-header">
+  <div class="top-header-inner">
+    <div class="header-left">
+      <div class="arabic-small">رَمَضَان كَرِيم</div>
+      <h1>Tracking Self Rebranding Ramadhan</h1>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:7px;">
+        <span style="font-size:0.75rem;color:rgba(255,255,255,0.55);letter-spacing:0.12em;">MILIK:</span>
+        <input id="owner-name" type="text" placeholder="Tulis namamu..."
+          style="background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.3);
+                 border-radius:6px;padding:5px 12px;font-family:'Tajawal',sans-serif;
+                 font-size:0.95rem;font-weight:700;color:#fff;outline:none;
+                 width:190px;letter-spacing:0.02em;"
+          oninput="saveOwnerName(this.value)" />
+      </div>
+      <p style="margin-top:4px;">HIGH-PERFORMANCE FORMULA · 30 HARI CHECKLIST HARIAN</p>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">TOTAL PROGRESS</div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="progress-bar-outer">
+          <div class="progress-bar-inner" id="main-bar" style="width:0%"></div>
+        </div>
+        <div class="progress-pct" id="main-pct">0%</div>
+      </div>
+      <div class="progress-label" id="main-count" style="color:rgba(255,255,255,0.5);">0 / 0 item terselesaikan</div>
+      <button class="btn-reset" onclick="resetAll()">↺ Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-box"></div> Belum</div>
+  <div class="legend-item"><div class="legend-box done"></div> Sudah ✓</div>
+  <div class="legend-item" style="margin-left:8px;">
+    <div style="width:14px;height:3px;background:#74b9ff;border-radius:99px;"></div> Dekade 1 (Hari 1–10)
+  </div>
+  <div class="legend-item">
+    <div style="width:14px;height:3px;background:#55efc4;border-radius:99px;"></div> Dekade 2 (Hari 11–20)
+  </div>
+  <div class="legend-item">
+    <div style="width:14px;height:3px;background:#fdcb6e;border-radius:99px;"></div> Dekade 3 (Hari 21–30)
+  </div>
+  <div class="legend-item" style="margin-left:auto; color:#c0392b; font-weight:600;">🔴 = Khusus malam terakhir</div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+<table id="tracking-table">
+  <thead>
+    <tr>
+      <th class="ibadah-col">AMALAN</th>
+      <!-- Day headers injected by JS -->
+    </tr>
+  </thead>
+  <tbody id="table-body">
+    <!-- Rows injected by JS -->
+  </tbody>
+</table>
+</div>
+
+<script>
+// ── DATA ──
+const groups = [
+  {
+    label: "🌙 Sahur & Qiyamullail · 03.00 – 04.00",
+    rows: [
+      { id: "sahur",   icon: "🌙", name: "Sahur" },
+      { id: "taubat",  icon: "🕌", name: "Shalat Taubat", sub: "2 rakaat" },
+      { id: "tahajud", icon: "🕌", name: "Shalat Tahajud", sub: "4 rakaat" },
+      { id: "hajat",   icon: "🕌", name: "Shalat Hajat", sub: "2 rakaat" },
+    ]
+  },
+  {
+    label: "📿 Dzikir Intensif · 04.00 – 04.29",
+    rows: [
+      { id: "dzikir4",    icon: "📿", name: "Dzikir 4 Kalimat", sub: "Subhanallah · Alhamdulillah · Lailahaillallah · Allahuakbar 100×" },
+      { id: "istighfar",  icon: "📿", name: "Istighfar", sub: "Astaghfirullahal 'azhim... 100×" },
+      { id: "shalawat",   icon: "💚", name: "Shalawat Nabi ﷺ", sub: "100×" },
+    ]
+  },
+  {
+    label: "🌅 Subuh · 04.29 – selesai",
+    rows: [
+      { id: "doa-pra-subuh",  icon: "🤲", name: "Doa Mustajab Sebelum Subuh", sub: "04.29–04.39" },
+      { id: "doa-azan-subuh", icon: "🤲", name: "Doa Antara Azan & Iqamah Subuh" },
+      { id: "qab-subuh",      icon: "🕌", name: "Qabliyah Subuh", sub: "2 rakaat" },
+      { id: "subuh",          icon: "🕌", name: "Shalat Subuh", sub: "2 rakaat fardhu" },
+      { id: "dzikir-subuh",   icon: "📿", name: "Dzikir Setelah Subuh" },
+      { id: "waqiah",         icon: "📖", name: "Surah Al-Waqi'ah", sub: "Khusus Jumat: Al-Kahfi" },
+      { id: "sedekah-subuh",  icon: "💛", name: "Sedekah Subuh" },
+    ]
+  },
+  {
+    label: "☀ Dhuha · 08.00 – 09.00",
+    rows: [
+      { id: "dhuha",      icon: "🕌", name: "Shalat Dhuha", sub: "4 rakaat" },
+      { id: "dzikir-pagi",icon: "📿", name: "Dzikir Pagi", sub: "Rangkaian lengkap" },
+    ]
+  },
+  {
+    label: "🌿 Dzuhur · 11.30 – 12.30",
+    rows: [
+      { id: "quran-dhuhur", icon: "📖", name: "Baca Al-Qur'an", sub: "2 lembar + resapi artinya · 11.30–12.00" },
+      { id: "qab-dzuhur",   icon: "🕌", name: "Qabliyah Dzuhur", sub: "4 rakaat" },
+      { id: "dzuhur",       icon: "🕌", name: "Shalat Dzuhur", sub: "4 rakaat fardhu" },
+      { id: "dzikir-dzuhur",icon: "📿", name: "Dzikir Setelah Dzuhur" },
+      { id: "bad-dzuhur",   icon: "🕌", name: "Ba'diyah Dzuhur", sub: "2 rakaat" },
+    ]
+  },
+  {
+    label: "🌤 Ashar · 15.00 – 15.35",
+    rows: [
+      { id: "quran-ashar",  icon: "📖", name: "Baca Al-Qur'an", sub: "2 lembar + resapi artinya · 15.00–15.19" },
+      { id: "doa-azan-ashar",icon: "🤲", name: "Doa Antara Azan & Iqamah Ashar" },
+      { id: "qab-ashar",    icon: "🕌", name: "Qabliyah Ashar", sub: "2 rakaat" },
+      { id: "ashar",        icon: "🕌", name: "Shalat Ashar", sub: "4 rakaat fardhu" },
+      { id: "dzikir-ashar", icon: "📿", name: "Dzikir Setelah Ashar" },
+      { id: "dzikir-sore",  icon: "📿", name: "Dzikir Sore", sub: "Rangkaian lengkap" },
+    ]
+  },
+  {
+    label: "🌇 Maghrib · 18.16 – 19.27",
+    rows: [
+      { id: "buka",         icon: "🌙", name: "Berbuka Puasa" },
+      { id: "doa-azan-mgr", icon: "🤲", name: "Doa Antara Azan & Iqamah Maghrib" },
+      { id: "maghrib",      icon: "🕌", name: "Shalat Maghrib", sub: "3 rakaat fardhu" },
+      { id: "bad-maghrib",  icon: "🕌", name: "Ba'diyah Maghrib", sub: "2 rakaat" },
+      { id: "dzikir-mgr",   icon: "📿", name: "Dzikir Setelah Maghrib" },
+      { id: "istighfar-mgr",icon: "📿", name: "Istighfar Intensif", sub: "Astaghfirullahal 'azhim... 100×" },
+      { id: "quran-mgr",    icon: "📖", name: "Baca Al-Qur'an", sub: "2 lembar + resapi artinya" },
+      { id: "doa-lailatul", icon: "⭐", name: "Doa Lailatul Qadar 100×", sub: "Allahumma innaka 'afuwwun...", special: true },
+    ]
+  },
+  {
+    label: "🌠 Isya & Tarawih · 19.27 – 20.30",
+    rows: [
+      { id: "doa-azan-isya",icon: "🤲", name: "Doa Antara Azan & Iqamah Isya" },
+      { id: "isya",         icon: "🕌", name: "Shalat Isya", sub: "4 rakaat fardhu" },
+      { id: "dzikir-isya",  icon: "📿", name: "Dzikir Setelah Isya" },
+      { id: "bad-isya",     icon: "🕌", name: "Ba'diyah Isya", sub: "2 rakaat" },
+      { id: "tarawih",      icon: "🕌", name: "Tarawih + Witir", sub: "11 rakaat" },
+      { id: "quran-isya",   icon: "📖", name: "Baca Al-Qur'an", sub: "4 lembar + resapi artinya" },
+    ]
+  },
+  {
+    label: "🌌 Penutup Malam · 22.00 – 22.30",
+    rows: [
+      { id: "doa-quran",    icon: "🤲", name: "Doa-doa dalam Al-Qur'an", sub: "Buku doa + artinya" },
+      { id: "deeptalk",     icon: "💬", name: "Deeptalk with Allah ﷻ", sub: "Munajat pribadi" },
+      { id: "sirah",        icon: "📖", name: "Sirah Nabawiyah", sub: "Pengantar tidur · Ust. Khalid Basalamah" },
+    ]
+  },
+];
+
+// ── STATE ──
+const DAYS = 30;
+let state = {};
+
+function stateKey(rowId, day) { return `${rowId}_d${day}`; }
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('ramadan_tracking_v2');
+    state = raw ? JSON.parse(raw) : {};
+  } catch(e) { state = {}; }
+}
+
+function saveState() {
+  try { localStorage.setItem('ramadan_tracking_v2', JSON.stringify(state)); } catch(e) {}
+}
+
+function saveOwnerName(value) {
+  state['__owner_name__'] = value;
+  saveState();
+}
+
+function saveNama(rowId, value) {
+  state[`nama_${rowId}`] = value;
+  saveState();
+}
+
+function toggle(rowId, day) {
+  const k = stateKey(rowId, day);
+  state[k] = !state[k];
+  saveState();
+  renderAll();
+}
+
+function resetAll() {
+  if (!confirm('Reset semua checklist? Data tidak bisa dikembalikan.')) return;
+  state = {};
+  saveState();
+  renderAll();
+}
+
+// ── BUILD TABLE STRUCTURE ──
+function buildTable() {
+  const thead = document.querySelector('thead tr');
+  const tbody = document.getElementById('table-body');
+
+  // Day headers
+  for (let d = 1; d <= DAYS; d++) {
+    const th = document.createElement('th');
+    const dekClass = d <= 10 ? 'dekade-1' : d <= 20 ? 'dekade-2' : 'dekade-3';
+    th.className = dekClass;
+    th.innerHTML = `<div class="day-head">
+      <span class="day-num">${d}</span>
+      <div class="day-progress"><div class="day-progress-fill" id="dp-${d}" style="width:0%"></div></div>
+    </div>`;
+    thead.appendChild(th);
+  }
+
+  // Rows
+  groups.forEach(group => {
+    // Group header
+    const gtr = document.createElement('tr');
+    gtr.className = 'group-header';
+    const gtd = document.createElement('td');
+    gtd.className = 'ibadah-col';
+    gtd.textContent = group.label;
+    gtr.appendChild(gtd);
+    for (let d = 1; d <= DAYS; d++) {
+      const td = document.createElement('td');
+      td.className = 'day-cell';
+      gtr.appendChild(td);
+    }
+    tbody.appendChild(gtr);
+
+    // Item rows
+    group.rows.forEach(row => {
+      const tr = document.createElement('tr');
+      if (row.special) tr.className = 'special-row';
+
+      // Label
+      const labelTd = document.createElement('td');
+      labelTd.className = 'ibadah-col';
+      labelTd.innerHTML = `<div class="ibadah-label">
+        <span class="ibadah-icon">${row.icon}</span>
+        <div>
+          <div class="ibadah-name">${row.name}</div>
+          ${row.sub ? `<div class="ibadah-sub">${row.sub}</div>` : ''}
+        </div>
+      </div>`;
+      tr.appendChild(labelTd);
+
+      // Day cells
+      for (let d = 1; d <= DAYS; d++) {
+        const td = document.createElement('td');
+        td.className = 'day-cell';
+        td.id = `cell-${row.id}-${d}`;
+        td.innerHTML = `<div class="check-box" id="cb-${row.id}-${d}" onclick="toggle('${row.id}', ${d})"></div>`;
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+// ── RENDER CHECKED STATE ──
+function renderAll() {
+  const allRows = groups.flatMap(g => g.rows);
+  let totalItems = 0, totalDone = 0;
+
+  // Update each checkbox
+  allRows.forEach(row => {
+    for (let d = 1; d <= DAYS; d++) {
+      const k = stateKey(row.id, d);
+      const isDone = !!state[k];
+      const cb = document.getElementById(`cb-${row.id}-${d}`);
+      const td = document.getElementById(`cell-${row.id}-${d}`);
+      if (cb) cb.className = isDone ? 'check-box done' : 'check-box';
+      if (td) td.className = isDone ? 'day-cell checked' : 'day-cell';
+      totalItems++;
+      if (isDone) totalDone++;
+    }
+  });
+
+  // Day column progress
+  for (let d = 1; d <= DAYS; d++) {
+    const dayTotal = allRows.length;
+    const dayDone = allRows.filter(r => !!state[stateKey(r.id, d)]).length;
+    const pct = dayTotal > 0 ? Math.round(dayDone / dayTotal * 100) : 0;
+    const bar = document.getElementById(`dp-${d}`);
+    if (bar) bar.style.width = pct + '%';
+  }
+
+  // Main progress
+  const pct = totalItems > 0 ? Math.round(totalDone / totalItems * 100) : 0;
+  document.getElementById('main-bar').style.width = pct + '%';
+  document.getElementById('main-pct').textContent = pct + '%';
+  document.getElementById('main-count').textContent = `${totalDone.toLocaleString()} / ${totalItems.toLocaleString()} item terselesaikan`;
+}
+
+// ── INIT ──
+loadState();
+buildTable();
+renderAll();
+
+// Restore owner name
+const ownerInput = document.getElementById('owner-name');
+if (ownerInput && state['__owner_name__']) {
+  ownerInput.value = state['__owner_name__'];
+}
+</script>
+</body>
+</html>
